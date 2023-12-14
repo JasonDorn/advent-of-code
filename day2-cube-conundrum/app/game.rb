@@ -1,3 +1,5 @@
+require "pry"
+
 class Game
   attr_reader :game_string
   VALID_COLORS = %w[red blue green].freeze
@@ -13,6 +15,23 @@ class Game
   def valid?(color_maxes)
     VALID_COLORS.each { |color| return false unless send("#{color}_valid?", color_maxes[color]) }
     true
+  end
+
+  def power_number
+    minimum_set = {
+      "red" => 0,
+      "green" => 0,
+      "blue" => 0
+    }
+
+    rounds.each do |round|
+      count, color = round.split(" ")
+      if count.to_i > minimum_set[color]
+        minimum_set[color] = count.to_i
+      end
+    end
+
+    minimum_set.values.compact.inject(:*)
   end
 
   private
